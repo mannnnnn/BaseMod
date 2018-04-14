@@ -1,0 +1,9 @@
+# Handle line endings automatically so we don't run into issues where
+# lots of files are using different line endings types
+* text eol=crlf
+* text eol=lf
+
+*.java	text
+*.json	text
+*.properties	text
+*.xml	text
