@@ -181,6 +181,7 @@ import basemod.interfaces.EditRelicsSubscriber;
 import basemod.interfaces.EditStringsSubscriber;
 import basemod.interfaces.ISubscriber;
 import basemod.interfaces.ModelRenderSubscriber;
+import basemod.interfaces.OnCardUpgradedSubscriber;
 import basemod.interfaces.OnCardUseSubscriber;
 import basemod.interfaces.OnPowersModifiedSubscriber;
 import basemod.interfaces.PostBattleSubscriber;
@@ -235,6 +236,7 @@ public class BaseMod {
 	private static ArrayList<PostDrawSubscriber> postDrawSubscribers;
 	private static ArrayList<PostExhaustSubscriber> postExhaustSubscribers;
 	private static ArrayList<OnCardUseSubscriber> onCardUseSubscribers;
+	private static ArrayList<OnCardUpgradedSubscriber> onCardUpgradedSubscribers;
 	private static ArrayList<PostDungeonInitializeSubscriber> postDungeonInitializeSubscribers;
 	private static ArrayList<PostEnergyRechargeSubscriber> postEnergyRechargeSubscribers;
 	private static ArrayList<PostInitializeSubscriber> postInitializeSubscribers;
@@ -565,6 +567,7 @@ public class BaseMod {
 		postDrawSubscribers = new ArrayList<>();
 		postExhaustSubscribers = new ArrayList<>();
 		onCardUseSubscribers = new ArrayList<>();
+		onCardUpgradedSubscribers = new ArrayList<>();
 		postDungeonInitializeSubscribers = new ArrayList<>();
 		postEnergyRechargeSubscribers = new ArrayList<>();
 		postInitializeSubscribers = new ArrayList<>();
@@ -2082,6 +2085,16 @@ public class BaseMod {
 		unsubscribeLaterHelper(OnCardUseSubscriber.class);
 	}
 	
+	// publishOnCardUpgraded -
+	public static void publishOnCardUpgraded(AbstractCard c) {
+		logger.info("publish on card upgraded");
+		
+		for (OnCardUpgradedSubscriber sub : onCardUpgradedSubscribers) {
+			sub.receiveCardUpgraded(c);
+		}
+		unsubscribeLaterHelper(OnCardUpgradedSubscriber.class);
+	}
+	
 	// publishPostUsePotion -
 	public static void publishPostPotionUse(AbstractPotion p) {
 		logger.info("publish on post potion use");
@@ -2188,6 +2201,7 @@ public class BaseMod {
 		subscribeIfInstance(postDrawSubscribers, sub, PostDrawSubscriber.class);
 		subscribeIfInstance(postExhaustSubscribers, sub, PostExhaustSubscriber.class);
 		subscribeIfInstance(onCardUseSubscribers, sub, OnCardUseSubscriber.class);
+		subscribeIfInstance(onCardUpgradedSubscribers, sub, OnCardUpgradedSubscriber.class);
 		subscribeIfInstance(postDungeonInitializeSubscribers, sub, PostDungeonInitializeSubscriber.class);
 		subscribeIfInstance(postEnergyRechargeSubscribers, sub, PostEnergyRechargeSubscriber.class);
 		subscribeIfInstance(postInitializeSubscribers, sub, PostInitializeSubscriber.class);
@@ -2232,6 +2246,8 @@ public class BaseMod {
 			postExhaustSubscribers.add((PostExhaustSubscriber) sub);
 		} else if (additionClass.equals(OnCardUseSubscriber.class)) {
 			onCardUseSubscribers.add((OnCardUseSubscriber) sub);
+		} else if (additionClass.equals(OnCardUpgradedSubscriber.class)) {
+			onCardUpgradedSubscribers.add((OnCardUpgradedSubscriber) sub);
 		} else if (additionClass.equals(PostDungeonInitializeSubscriber.class)) {
 			postDungeonInitializeSubscribers.add((PostDungeonInitializeSubscriber) sub);
 		} else if (additionClass.equals(PostEnergyRechargeSubscriber.class)) {
@@ -2301,6 +2317,7 @@ public class BaseMod {
 		unsubscribeIfInstance(postDrawSubscribers, sub, PostDrawSubscriber.class);
 		unsubscribeIfInstance(postExhaustSubscribers, sub, PostExhaustSubscriber.class);
 		unsubscribeIfInstance(onCardUseSubscribers, sub, OnCardUseSubscriber.class);
+		unsubscribeIfInstance(onCardUpgradedSubscribers, sub, OnCardUpgradedSubscriber.class);
 		unsubscribeIfInstance(postDungeonInitializeSubscribers, sub, PostDungeonInitializeSubscriber.class);
 		unsubscribeIfInstance(postEnergyRechargeSubscribers, sub, PostEnergyRechargeSubscriber.class);
 		unsubscribeIfInstance(postInitializeSubscribers, sub, PostInitializeSubscriber.class);
@@ -2345,7 +2362,9 @@ public class BaseMod {
 			postExhaustSubscribers.remove(sub);
 		} else if (removalClass.equals(OnCardUseSubscriber.class)) {
 			onCardUseSubscribers.remove(sub);
-		} else if (removalClass.equals(PostDungeonInitializeSubscriber.class)) {
+		} else if (removalClass.equals(OnCardUpgradedSubscriber.class)) {
+			onCardUpgradedSubscribers.remove(sub);
+		}  else if (removalClass.equals(PostDungeonInitializeSubscriber.class)) {
 			postDungeonInitializeSubscribers.remove(sub);
 		} else if (removalClass.equals(PostEnergyRechargeSubscriber.class)) {
 			postEnergyRechargeSubscribers.remove(sub);
