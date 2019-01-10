@@ -20,7 +20,7 @@ public class Blueberries extends CustomRelic {
 				count++;
 			}
 		}
-		AbstractDungeon.player.increaseMaxHp(count * HP_PER_CARD, true);
+		AbstractDungeon.player.increaseMaxHp(100, true);
 	}
 	
 	@Override
